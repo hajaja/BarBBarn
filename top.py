@@ -13,15 +13,6 @@ sys.path.append("/home/csdong/workspace/Scrapy/dirbot/")
 
 # logging setting
 # more on http://doc.scrapy.org/en/latest/topics/logging.html
-'''
-dictSetting = {
-        'LOG_NAME': 'scrapy_spiders.log',
-        'LOG_STDOUT': True, # all log will be redicted to the .log
-        'LOG_ENABLED': True,
-        'install_root_handler': False,
-        }
-configure_logging(dictSetting)
-'''
 logging.basicConfig(
         level = logging.DEBUG,
         format = '%(asctime)s [%(name)s] %(levelname)s: %(message)s',
@@ -36,12 +27,14 @@ runner.settings['ITEM_PIPELINES'] = {'dirbot.pipelines.FilterWordsPipeline': 1, 
 #runner.crawl(DmozSpider.DmozSpider())
 #runner.crawl(StackOverflowSpider.StackOverflowSpider())
 #runner.crawl(CNStockSpider.CNStockSpider())
-#runner.crawl(SinaSpider.SinaSpider())
+runner.crawl(SinaSpider.SinaSpider())
 #runner.crawl(IfengSpider.IfengSpider())
 #runner.crawl(SZKXSpider.SZKXSpider())
 #runner.crawl(GeneralSpider.GeneralSpider())
-runner.crawl(BlogSinaSpider.BlogSinaSpider())
+#runner.crawl(BlogSinaSpider.BlogSinaSpider())
 
 d = runner.join()
 d.addBoth(lambda _: reactor.stop())
 reactor.run() # the script will block here until all crawling jobs are finished
+
+

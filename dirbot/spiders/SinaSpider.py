@@ -21,18 +21,28 @@ def buildItem(taga, source, dictSettings={}):
 class SinaSpider(scrapy.Spider):
     source = 'Sina'
     name = source + 'Spider'
-    start_urls = ['http://finance.sina.com.cn']
+    start_urls = [
+        'http://finance.sina.com.cn',
+        'http://finance.sina.com.cn/stock/',
+        ]
 
     def parse(self, response):
         # find all <a>
         listTaga = []
         try:
             listTaga = listTaga + response.css('div[id="blk_hdline_01"]').css('a')
+            listTaga = listTaga + response.css('div[class="m-p1-mb1-list m-list-container"]').css('a')
             listTaga = listTaga + response.css('div[data-client="scroll important"]').css('a')
             listTaga = listTaga + response.css('div[data-sudaclick="blk_yw_zq_01_1"]').css('a')
             listTaga = listTaga + response.css('div[data-sudaclick="blk_yw_zq_01_2"]').css('a')
             listTaga = listTaga + response.css('div[data-sudaclick="blk_yw_zq_01_3"]').css('a')
             listTaga = listTaga + response.css('div[data-sudaclick="blk_yw_zq_01_4"]').css('a')
+
+            listTaga = listTaga + response.css('div[class="hdline"]').css('a')
+            listTaga = listTaga + response.css('ul[class="list01"]').css('a')
+            listTaga = listTaga + response.css('ul[class="list02"]').css('a')
+            listTaga = listTaga + response.css('ul[class="list03"]').css('a')
+            listTaga = listTaga + response.css('ul[class="list04"]').css('a')
         except:
             logging.log(logging.ERROR, 'Home page parse error')
             logging.exception(self.source)
@@ -59,6 +69,9 @@ class SinaSpider(scrapy.Spider):
             if dtCreated is None:
                 # http://finance.sina.com.cn/zl/stock/20160616/082024822271.shtml
                 dtCreated = response.css('span[class="pub_date"]::text').extract_first()
+            if dtCreated is None:
+                # http://finance.sina.com.cn/fawen/yx/2017-09-01/doc-ifykqmrv6758137.shtml
+                dtCreated = response.css('span[class="atc-date"]::text').extract_first()
             # replace nian yue ri in Chinese
             dtCreated = re.sub('[^\d:]+', ' ', dtCreated)
             dtCreated = dateutil.parser.parse(dtCreated + '+8:00')

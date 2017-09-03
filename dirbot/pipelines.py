@@ -20,10 +20,10 @@ from scrapy.exceptions import DropItem
 
 MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
-#MONGODB_DB = "stackoverflow"
-#MONGODB_COLLECTION = "questions"
-MONGODB_DB = "Blog"
-MONGODB_COLLECTION = "popular"
+MONGODB_DB = "stackoverflow"
+MONGODB_COLLECTION = "questions"
+#MONGODB_DB = "Blog"
+#MONGODB_COLLECTION = "popular"
 
 class MongoDBPipeline(object):
     def __init__(self):
@@ -42,7 +42,7 @@ class MongoDBPipeline(object):
                 raise DropItem("Missing {0}!".format(data))
         if valid:
             self.collection.insert(dict(item))
-            logging.log(logging.DEBUG, "Question added to MongoDB database!")
+            logging.log(logging.DEBUG, "blog added to MongoDB database!")
         return item
 
 

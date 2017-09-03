@@ -27,3 +27,4 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': None,
     'dirbot.middlewares.DownloadMiddleware.RotateUserAgentMiddleware': 400,
     }
+
