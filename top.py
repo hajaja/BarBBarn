@@ -9,7 +9,7 @@ import sys
 import logging
 
 # for import file from sibling/parent directory
-sys.path.append("/home/csdong/workspace/Scrapy/dirbot/")
+sys.path.append("/home/csdong/dongcs/BarBBarn/dirbot/")
 
 # logging setting
 # more on http://doc.scrapy.org/en/latest/topics/logging.html
