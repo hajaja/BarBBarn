@@ -28,7 +28,7 @@ class SZKXSpider(scrapy.Spider):
         # find all <a>
         listTaga = []
         try:
-            listTaga = listTaga + response.css('ul[id="bw-list"]').css('div[class="title"]').css('a')
+            listTaga = listTaga + response.css('ul[id="bw-list"]').css('a')
         except:
             logging.log(logging.ERROR, 'Home page parse error')
             logging.exception(self.source)
@@ -58,9 +58,18 @@ class SZKXSpider(scrapy.Spider):
         try:
             title = response.css('h1[class="title"]::text').extract_first()
             dtCreated = response.css('span[class="timer"]::text').extract_first()
+            if dtCreated is None:
+                # http://news.cnstock.com/theme,1562.html
+                dtCreated = response.css('p[class="time"]::text').extract_first()
+            print dtCreated
+            if dtCreated is None:
+                print response
             dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
             dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
             text = response.css('div[id="qmt_content_div"]').css('p::text').extract()
+            if text is None:
+                print response
+                text = response.css('p::text').extract()
             text = ' '.join(text)
     
             item = News()

@@ -31,12 +31,15 @@ class IfengSpider(scrapy.Spider):
         # find all <a>
         listTaga = []
         try:
+            '''
             if response.url == 'http://finance.ifeng.com':
                 listTaga = listTaga + response.css('div[class="box_01"]').css('li').css('a')
                 listTaga = listTaga + response.css('div[class="box_02"]').css('li').css('a')
                 listTaga = listTaga + response.css('div[class="box_03"]').css('li').css('a')
             else:
                 listTaga = listTaga + response.css('div[class="box_list"]').css('li').css('h3>a')
+            '''
+            listTaga = response.css('div[class^="box"]').css('a')
         except:
             logging.log(logging.ERROR, 'Home page parse error')
             logging.exception(self.source)

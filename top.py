@@ -27,11 +27,12 @@ runner.settings['ITEM_PIPELINES'] = {'dirbot.pipelines.FilterWordsPipeline': 1, 
 #runner.crawl(DmozSpider.DmozSpider())
 #runner.crawl(StackOverflowSpider.StackOverflowSpider())
 #runner.crawl(CNStockSpider.CNStockSpider())
-runner.crawl(SinaSpider.SinaSpider())
+#runner.crawl(SinaSpider.SinaSpider())
 #runner.crawl(IfengSpider.IfengSpider())
-#runner.crawl(SZKXSpider.SZKXSpider())
+runner.crawl(SZKXSpider.SZKXSpider())
 #runner.crawl(GeneralSpider.GeneralSpider())
 #runner.crawl(BlogSinaSpider.BlogSinaSpider())
+
 
 d = runner.join()
 d.addBoth(lambda _: reactor.stop())
