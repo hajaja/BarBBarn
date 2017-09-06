@@ -11,11 +11,11 @@ import time
 class GeneralSpider(scrapy.Spider):
     name = 'GeneralSpider'
     start_urls = [
-            'http://finance.sina.com.cn/',
-            'http://finance.ifeng.com/',
+            #'http://finance.sina.com.cn/',
+            #'http://finance.ifeng.com/',
             'http://finance.qq.com/',
-            'http://finance.sohu.com/',
-            'http://www.cnstock.com/',
+            'http://business.sohu.com/',
+            #'http://www.cnstock.com/',
             'http://www.caijing.com.cn/',
             'http://www.jrj.com.cn/',
             'http://www.yicai.com/',
@@ -71,6 +71,8 @@ class GeneralSpider(scrapy.Spider):
                     dtCreated = response.css('span[class="pub_date"]::text').extract_first()
                 # replace nian yue ri in Chinese
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[id="artibody"]').css('::text').extract()
                 text = ' '.join(text)
@@ -79,13 +81,17 @@ class GeneralSpider(scrapy.Spider):
                 #title = response.css('h1[id="artical_topic"]::text').extract_first()
                 dtCreated = response.css('span[class="ss01"]::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[id="main_content"]').css('::text').extract()
                 text = ' '.join(text)
                 text = re.sub('[\s\t\n][\s\t\n]+', '', text)
             elif source is 'QQ':
-                dtCreated = response.css('span[class="pubTime article-time"]::text').extract_first()
+                dtCreated = response.css('span[class="a_time"]::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[id="Cnt-Main-Article-QQ"]').css('::text').extract()
                 text = ' '.join(text)
@@ -94,8 +100,10 @@ class GeneralSpider(scrapy.Spider):
                 #title = response.css('h1[id="artical_topic"]::text').extract_first()
                 dtCreated = response.css('div[class="time"]::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
-                text = response.css('div[itemprop="articleBody"]').css('::text').extract()
+                text = response.css('div[itemprop="article"]').css('::text').extract()
                 text = ' '.join(text)
                 text = re.sub('[\s\t\n][\s\t\n]+', '', text)
             elif source is 'CNStock':
@@ -105,6 +113,8 @@ class GeneralSpider(scrapy.Spider):
                 dtCreated = response.css('span[class="timer"]::text').extract_first()
                 if dtCreated is None:
                     dtCreated = response.css('span[class="time"]').extract_first()
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[id="qmt_content_div"]').css('p::text').extract()
                 text = ' '.join(text)
@@ -112,6 +122,8 @@ class GeneralSpider(scrapy.Spider):
                 #title = response.css('h1[id="cont_title"]::text').extract_first()
                 dtCreated = response.css('span[id="pubtime_baidu"]::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[id="the_content"]').css('::text').extract()
                 text = ' '.join(text)
@@ -120,6 +132,8 @@ class GeneralSpider(scrapy.Spider):
                 #title = response.css('h1::text').extract_first()
                 dtCreated = response.css('p[class="inftop"]>span')[0].css('::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[class="texttit_m1"]').css('::text').extract()
                 text = ' '.join(text)
@@ -127,6 +141,8 @@ class GeneralSpider(scrapy.Spider):
             elif source is 'CBN':
                 dtCreated = response.css('h2>span')[1].css('::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[class="m-text"]').css('::text').extract()
                 text = ' '.join(text)
@@ -134,16 +150,20 @@ class GeneralSpider(scrapy.Spider):
                 #title = response.css('h1::text').extract_first()
                 dtCreated = response.css('span[id="pubtime_baidu"]::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
                 text = response.css('div[class="atc_content"]').css('::text').extract()
                 text = ' '.join(text)
                 pass
             elif source is 'EastMoney':
                 #title = response.css('h1::text').extract_first()
-                dtCreated = response.css('div[class="Info"]>span')[0].css('::text').extract_first()
+                dtCreated = response.css('div[class="time"]>span')[0].css('::text').extract_first()
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)   # replace non digit and colon
+                if dtCreated is None:
+                    logging.log(logging.DEBUG, response)
                 dtCreated = dateutil.parser.parse(dtCreated + '+8:00')
-                text = response.css('div[class="Body"]').css('::text').extract()
+                text = response.css('div[class="ContentBody"]').css('::text').extract()
                 text = ' '.join(text)
                 pass
             else:

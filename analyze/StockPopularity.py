@@ -15,7 +15,7 @@ iterDoc = collection.find({
     "dtCrawled": {
         "$gt": datetime.datetime(2017, 1, 1)
         },
-    "source": "Sina",
+    #"source": "Sina",
     })
 listJSON = [doc for doc in iterDoc]
 dfNews = pd.DataFrame(listJSON)
@@ -33,6 +33,8 @@ dfNews['text_cut'] = dfNews['text']
 dfNews['text_cut'] = dfNews['text_cut'].apply(funCutRawTextToList)
 
 # rank the popularity of the stock symbols
+#dfNews.ix[dfNews['dtCreated']=='', 'dtCreated'] = dfNews.ix[dfNews['dtCreated']=='', 'dtCrawled']
+dfNews = dfNews[dfNews['dtCreated'].apply(lambda x: type(x)) == datetime.datetime]
 dtLatest = dfNews['dtCreated'].max() + datetime.timedelta(1, 0)
 dtLatest = datetime.datetime.combine(dtLatest, datetime.time(0, 0))
 listDate = pd.date_range(dtLatest-datetime.timedelta(3), dtLatest).tolist()
@@ -46,7 +48,11 @@ for nDate, dt in enumerate(listDate[0:]):
     dictWords = {}
     dictWordsListTitle = {}
     for ix, row in dfNewsOneDay.iterrows():
-        listOne = row['title_cut'] + row['text_cut']
+        listOne = []
+        if row['title_cut'] is not None:
+            listOne = listOne + row['title_cut']
+        if row['text_cut'] is not None:
+            listOne = listOne + row['text_cut']
         if listOne is not None:
             for word in listOne:
                 if word not in listStockName:
@@ -58,6 +64,7 @@ for nDate, dt in enumerate(listDate[0:]):
                 else:
                     dictWords[word] = 1
                     dictWordsListTitle[word] = [row['title']]
+                break
 
     seriesWordsStock = pd.Series(dictWords).sort_values()
     seriesWordsStock.name = dt
