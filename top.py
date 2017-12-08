@@ -23,12 +23,16 @@ logging.basicConfig(
 
 # add spiders
 runner = CrawlerRunner()
-runner.settings['ITEM_PIPELINES'] = {'dirbot.pipelines.FilterWordsPipeline': 1, 'dirbot.pipelines.MongoDBPipeline':1}
+runner.settings['ITEM_PIPELINES'] = {
+        'dirbot.pipelines.FilterWordsPipeline': 1, 
+        #'dirbot.pipelines.MongoDBPipeline':1,
+        'dirbot.pipelines.MySQLPipeline':1,
+        }
 #runner.crawl(DmozSpider.DmozSpider())
 #runner.crawl(StackOverflowSpider.StackOverflowSpider())
-runner.crawl(CNStockSpider.CNStockSpider())
-runner.crawl(SinaSpider.SinaSpider())
-runner.crawl(IfengSpider.IfengSpider())
+#runner.crawl(CNStockSpider.CNStockSpider())
+#runner.crawl(SinaSpider.SinaSpider())
+#runner.crawl(IfengSpider.IfengSpider())
 #runner.crawl(SZKXSpider.SZKXSpider())
 runner.crawl(GeneralSpider.GeneralSpider())
 #runner.crawl(BlogSinaSpider.BlogSinaSpider())

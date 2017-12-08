@@ -1,10 +1,13 @@
 # Scrapy settings for dirbot project
-
 SPIDER_MODULES = ['dirbot.spiders']
 NEWSPIDER_MODULE = 'dirbot.spiders'
 DEFAULT_ITEM_CLASS = 'dirbot.items.News'
 
-ITEM_PIPELINES = {'dirbot.pipelines.FilterWordsPipeline': 1, 'dirbot.pipelines.MongoDBPipeline':1}
+ITEM_PIPELINES = {
+        'dirbot.pipelines.FilterWordsPipeline': 1, 
+        #'dirbot.pipelines.MongoDBPipeline':1,
+        'dirbot.pipelines.MySQLPipeline':1,
+        }
 
 DICT_SWITCH = {
         'PARSE_PAGE': True,
@@ -14,7 +17,7 @@ DICT_SWITCH = {
         }
 
 # download frequency
-DOWNLOAD_DELAY = 1
+DOWNLOAD_DELAY = 0.5
 CONCURRENT_REQUESTS_PER_DOMAIN = 1
 CONCURRENT_REQUESTS_PER_IP = 1
 CONCURRENT_REQUESTS = 1

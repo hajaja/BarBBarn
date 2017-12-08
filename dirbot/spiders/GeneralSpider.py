@@ -11,19 +11,19 @@ import time
 class GeneralSpider(scrapy.Spider):
     name = 'GeneralSpider'
     start_urls = [
-            #'http://finance.sina.com.cn/',
+            'http://finance.sina.com.cn/',
             #'http://finance.ifeng.com/',
-            'http://finance.qq.com/',
-            'http://business.sohu.com/',
+            #'http://finance.qq.com/',
+            #'http://business.sohu.com/',
             #'http://www.cnstock.com/',
-            'http://www.caijing.com.cn/',
-            'http://www.jrj.com.cn/',
-            'http://www.yicai.com/',
-            'http://www.10jqka.com.cn/',
-            'http://www.eastmoney.com/',
+            #'http://www.caijing.com.cn/',
+            #'http://www.jrj.com.cn/',
+            #'http://www.yicai.com/',
+            #'http://www.10jqka.com.cn/',
+            #'http://www.eastmoney.com/',
             ]
     def parse(self, response):
-        self.download_delay = 20
+        self.download_delay = 0.5
         self.random_download_delay = False
         # find all <a>
         listTaga = []
@@ -41,6 +41,9 @@ class GeneralSpider(scrapy.Spider):
         # crawl taga
         for taga in listTaga:
             full_url = taga.css('::attr(href)').extract_first().strip()
+            if full_url.startswith('//'):
+                full_url = 'http:' + full_url
+                logging.log(logging.ERROR, full_url)
             title = taga.css('::text').extract_first()
             yield scrapy.Request(full_url, callback=self.parse_page, meta={'title': title})
         
@@ -69,6 +72,12 @@ class GeneralSpider(scrapy.Spider):
                 if dtCreated is None:
                     # http://finance.sina.com.cn/zl/stock/20160616/082024822271.shtml
                     dtCreated = response.css('span[class="pub_date"]::text').extract_first()
+                elif dtCreated is None:
+                    # http://finance.sina.com.cn/zl/stock/20160616/082024822271.shtml
+                    dtCreated = response.css('span[class="time"]::text').extract_first()
+                elif dtCreated is None:
+                    # http://blog.sina.com.cn/u/1197890497
+                    dtCreated = response.css('span[class="time SG_txtc"]::text').extract_first()[1:-1]
                 # replace nian yue ri in Chinese
                 dtCreated = re.sub('[^\d:]+', ' ', dtCreated)
                 if dtCreated is None:
