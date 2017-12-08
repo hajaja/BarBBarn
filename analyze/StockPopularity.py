@@ -3,11 +3,17 @@ import pandas as pd
 import datetime
 from dateutil.parser import parse
 
+import StockDataBase as SDB
+reload(SDB)
+import StockDataBase.DataReader as SDBReader
+reload(SDBReader)
+
 # set up
 strFileUserDictStockSymbol = 'userDictStockSymbol.txt'
 listStockName = pd.read_csv(strFileUserDictStockSymbol, header=None, encoding='utf-8')[0].to_dict().values()
 
 # retrieve data from database
+'''
 client = pymongo.MongoClient()
 db = client['stackoverflow']
 collection = db['questions']
@@ -19,6 +25,8 @@ iterDoc = collection.find({
     })
 listJSON = [doc for doc in iterDoc]
 dfNews = pd.DataFrame(listJSON)
+'''
+dfNews = SDBReader.getAll('NewsRaw')
 
 # cut text
 import jieba
@@ -34,7 +42,8 @@ dfNews['text_cut'] = dfNews['text_cut'].apply(funCutRawTextToList)
 
 # rank the popularity of the stock symbols
 #dfNews.ix[dfNews['dtCreated']=='', 'dtCreated'] = dfNews.ix[dfNews['dtCreated']=='', 'dtCrawled']
-dfNews = dfNews[dfNews['dtCreated'].apply(lambda x: type(x)) == datetime.datetime]
+#dfNews = dfNews[dfNews['dtCreated'].apply(lambda x: type(x)) == ]
+dfNews = dfNews[dfNews['dtCreated'].isnull()==False]
 dtLatest = dfNews['dtCreated'].max() + datetime.timedelta(1, 0)
 dtLatest = datetime.datetime.combine(dtLatest, datetime.time(0, 0))
 listDate = pd.date_range(dtLatest-datetime.timedelta(3), dtLatest).tolist()
@@ -76,5 +85,4 @@ for nDate, dt in enumerate(listDate[0:]):
 
 dfStockCount = pd.concat(listSeriesStock, axis=1)
 dfStockTitle = pd.concat(listSeriesStockTitle, axis=1)
-
 
