@@ -1,3 +1,4 @@
+# -*-coding=utf-8-*-
 import scrapy
 from dirbot.items import Website, News
 import dirbot.settings
@@ -7,6 +8,13 @@ import dateutil.parser
 import traceback
 import re
 import time
+
+###############
+# param
+###############
+strDirRoot = '/root/workspace/DATA/BarBBarn/'
+strFileUserDictStockSymbol = strDirRoot + 'Data/userDictStockSymbol.txt'
+
 
 def parseDT(strDT):
     ret = None

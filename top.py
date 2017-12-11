@@ -1,3 +1,4 @@
+# -*-coding=utf-8-*-
 import scrapy
 from twisted.internet import reactor
 from scrapy.crawler import CrawlerRunner, CrawlerProcess
